@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestalt Psychology - Wertheimer, Köhler, Koffka</title>
+<style>
+  :root {
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-tertiary: #737373;
+    --text-quaternary: #a3a3a3;
+    --surface: #fafafa;
+    --surface-muted: #f3f3f3;
+    --surface-raised: #ffffff;
+    --surface-strong: #e8e8e8;
+    --border: #e0e0e0;
+    --danger: #dc2626;
+    --positive: #16a34a;
+    --warning: #ca8a04;
+    --accent: #2563eb;
+    --chart-1: #2563eb;
+    --chart-2: #dc2626;
+    --chart-3: #16a34a;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --t-fast: 150ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text-primary: #f5f5f5;
+      --text-secondary: #c2c2c2;
+      --text-tertiary: #8a8a8a;
+      --text-quaternary: #6b6b6b;
+      --surface: #0a0a0a;
+      --surface-muted: #171717;
+      --surface-raised: #1f1f1f;
+      --surface-strong: #2a2a2a;
+      --border: #2e2e2e;
+      --danger: #ef4444;
+      --positive: #22c55e;
+      --warning: #eab308;
+      --accent: #3b82f6;
+      --chart-1: #3b82f6;
+      --chart-2: #ef4444;
+      --chart-3: #22c55e;
+    }
+  }
+  body { margin: 0; padding: 16px; font-family: var(--font-sans); background: var(--surface); color: var(--text-primary); }
+  .gestalt-widget { max-width: 720px; margin: 0 auto; }
+  .gestalt-widget * { box-sizing: border-box; }
+  .gestalt-widget button, .gestalt-widget input { font: inherit; }
+
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; overflow-x: auto; }
+  .tab-btn { background: transparent; border: none; padding: 10px 14px; cursor: pointer; color: var(--text-tertiary); font-size: 14px; font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out); white-space: nowrap; }
+  .tab-btn:hover { color: var(--text-secondary); }
+  .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+
+  .panel { display: none; animation: fadeIn 0.2s ease-out; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .hero { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .hero-avatar { width: 56px; height: 56px; border-radius: 12px; background: var(--surface-muted); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; font-weight: 500; color: var(--text-secondary); border: 1px solid var(--border); }
+  .hero-text h2 { margin: 0 0 6px; font-size: 20px; font-weight: 500; line-height: 1.2; }
+  .hero-text p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+  .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+  .meta-chip { font-size: 12px; color: var(--text-quaternary); background: var(--surface-muted); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); }
+
+  .section-title { font-size: 15px; font-weight: 500; margin: 20px 0 10px; color: var(--text-primary); }
+  .card { background: var(--surface-muted); border-radius: 10px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
+  .card-title { font-size: 14px; font-weight: 500; margin: 0 0 6px; }
+  .card-body { font-size: 14px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+  .card-body strong { color: var(--text-primary); font-weight: 500; }
+
+  .founders { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .founder { background: var(--surface-muted); border-radius: 10px; padding: 14px; cursor: pointer; transition: background var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out); border: 1px solid var(--border); }
+  .founder:hover { background: var(--surface-raised); transform: translateY(-1px); }
+  .founder.active { border-color: var(--border); background: var(--surface-raised); }
+  .founder h4 { margin: 0 0 6px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .founder p { margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .founder .detail { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .founder.active .detail { display: block; }
+  .f-avatar { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; background: var(--surface-strong); font-size: 12px; font-weight: 500; color: var(--text-tertiary); }
+
+  .principle-card { background: var(--surface-muted); border-radius: 10px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: background var(--t-fast) var(--ease-out); border: 1px solid var(--border); }
+  .principle-card:hover { background: var(--surface-raised); border-color: var(--border); }
+  .principle-card.active { border-color: var(--border); background: var(--surface-raised); }
+  .principle-card h4 { margin: 0 0 8px; font-size: 14px; font-weight: 500; }
+  .principle-card p { margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .principle-card .demo { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .principle-card.active .demo { display: block; }
+
+  .timeline { position: relative; padding-left: 24px; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px; width: 2px; background: var(--border); border-radius: 1px; }
+  .t-event { position: relative; margin-bottom: 16px; }
+  .t-event::before { content: ''; position: absolute; left: -21px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--surface-raised); border: 2px solid var(--text-quaternary); }
+  .t-event.active::before { border-color: var(--text-primary); background: var(--text-primary); }
+  .t-event h4 { margin: 0 0 4px; font-size: 14px; font-weight: 500; }
+  .t-event p { margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .t-event .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-top: 6px; margin-right: 4px; background: rgba(37, 99, 235, 0.1); color: var(--chart-1); }
+
+  .sultan-box { background: var(--surface-muted); border-radius: 10px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
+  .sultan-stage { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 12px; background: var(--surface-raised); border-radius: 8px; min-height: 60px; border: 1px solid var(--border); }
+  .sultan-stage svg { flex-shrink: 0; }
+  .sultan-stage p { margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .sultan-nav { display: flex; gap: 8px; }
+  .sultan-nav button { background: var(--surface-raised); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; color: var(--text-secondary); transition: all var(--t-fast) var(--ease-out); }
+  .sultan-nav button:hover { background: var(--surface-strong); color: var(--text-primary); }
+  .sultan-nav button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .quiz-option { display: block; width: 100%; text-align: left; background: var(--surface-muted); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; cursor: pointer; font-size: 14px; color: var(--text-secondary); transition: all var(--t-fast) var(--ease-out); }
+  .quiz-option:hover { background: var(--surface-raised); border-color: var(--text-quaternary); }
+  .quiz-option.correct { border-color: var(--positive); background: rgba(22, 163, 74, 0.08); color: var(--text-primary); }
+  .quiz-option.wrong { border-color: var(--danger); background: rgba(220, 38, 38, 0.08); }
+  .quiz-feedback { font-size: 13px; margin-top: 8px; display: none; }
+  .quiz-feedback.show { display: block; }
+
+  .motto { text-align: center; padding: 20px; background: var(--surface-muted); border-radius: 10px; margin: 16px 0; border: 1px solid var(--border); }
+  .motto-text { font-size: 18px; font-weight: 500; color: var(--text-primary); font-style: italic; }
+  .motto-sub { font-size: 13px; color: var(--text-tertiary); margin-top: 6px; }
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<div class="gestalt-widget">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="founders">The Founders</button>
+    <button class="tab-btn" data-tab="principles">Principles</button>
+    <button class="tab-btn" data-tab="experiments">Experiments</button>
+    <button class="tab-btn" data-tab="quiz">Quiz</button>
+  </div>
+
+  <div class="panel active" id="overview">
+    <div class="hero">
+      <div class="hero-avatar">◈</div>
+      <div class="hero-text">
+        <h2>Gestalt Psychology</h2>
+        <p>A school of psychology that emphasizes that we perceive objects as whole patterns rather than as the sum of their individual parts. The whole is different from — and greater than — the sum of its parts.</p>
+        <div class="meta-row">
+          <span class="meta-chip">Founded ~1910</span>
+          <span class="meta-chip">Germany</span>
+          <span class="meta-chip">Perception &amp; Cognition</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="motto">
+      <div class="motto-text">"The whole is other than the sum of the parts."</div>
+      <div class="motto-sub">— Kurt Koffka, 1935</div>
+    </div>
+
+    <div class="section-title">Core idea</div>
+    <div class="card">
+      <p class="card-body">Gestalt psychologists argued against the structuralist view that perception is built up from elementary sensations. Instead, they showed that the brain actively organizes sensory input into meaningful, coherent wholes using innate organizational laws.</p>
+    </div>
+
+    <div class="section-title">Key contributions</div>
+    <div class="card">
+      <div class="card-title">Perceptual organization</div>
+      <p class="card-body">Identified laws of perceptual grouping (proximity, similarity, closure, continuity, common fate) that explain how we naturally organize visual elements.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Insight learning</div>
+      <p class="card-body">Köhler's experiments with chimpanzees demonstrated that problem-solving can occur through sudden "aha!" moments of insight rather than gradual trial-and-error.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Phi phenomenon</div>
+      <p class="card-body">Wertheimer's discovery that rapid alternation of two stationary lights creates the illusion of motion — a foundational finding for film and animation.</p>
+    </div>
+  </div>
+
+  <div class="panel" id="founders">
+    <div class="section-title">The three founders</div>
+    <div class="founders">
+      <div class="founder" onclick="this.classList.toggle('active')">
+        <h4><span class="f-avatar">MW</span> Max Wertheimer</h4>
+        <p><strong>1880 – 1943</strong><br>Considered the father of Gestalt psychology. His 1912 paper on the phi phenomenon launched the movement.</p>
+        <div class="detail">
+          <strong>Key work:</strong> "Experimental Studies on the Perception of Movement" (1912)<br><br>
+          Wertheimer observed that when two lights flash in rapid succession, we perceive a single light moving between them — not two separate lights. This "apparent motion" proved that perception is an active, organizational process, not a passive accumulation of sensations. He later fled Nazi Germany and taught at the New School for Social Research in New York.
+        </div>
+      </div>
+      <div class="founder" onclick="this.classList.toggle('active')">
+        <h4><span class="f-avatar">WK</span> Wolfgang Köhler</h4>
+        <p><strong>1887 – 1967</strong><br>Pioneered insight learning research with chimpanzees on Tenerife during World War I.</p>
+        <div class="detail">
+          <strong>Key work:</strong> "The Mentality of Apes" (1917 / 1925)<br><br>
+          Köhler conducted famous experiments with Sultan the chimpanzee, showing that apes could solve problems through insight rather than trial-and-error. He also introduced the concept of "isomorphism" — the idea that brain processes mirror the structure of perceived phenomena. He later became a vocal critic of Nazi ideology and emigrated to the United States.
+        </div>
+      </div>
+      <div class="founder" onclick="this.classList.toggle('active')">
+        <h4><span class="f-avatar">KK</span> Kurt Koffka</h4>
+        <p><strong>1886 – 1941</strong><br>The systematizer who brought Gestalt ideas to American psychology through his influential textbook.</p>
+        <div class="detail">
+          <strong>Key work:</strong> "The Growth of the Mind" (1924) and "Principles of Gestalt Psychology" (1935)<br><br>
+          Koffka extended Gestalt principles beyond perception to child development, memory, and learning. He argued that behavior must be studied as a "behavioral field" organized according to Gestalt laws. His 1935 textbook remains the most comprehensive statement of Gestalt theory. He taught at Smith College in Massachusetts.
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">How they met</div>
+    <div class="timeline">
+      <div class="t-event active">
+        <h4>1910 — Frankfurt train</h4>
+        <p>Wertheimer purchased a toy stroboscope on a train and realized it could be used to study apparent motion. He got off at Frankfurt and recruited Koffka and Köhler — then students at the Psychological Institute — as his research assistants.</p>
+        <span class="tag">Origin story</span>
+      </div>
+      <div class="t-event">
+        <h4>1912 — The phi phenomenon</h4>
+        <p>Wertheimer published his landmark paper, establishing the empirical basis for Gestalt psychology. Koffka and Köhler became his collaborators and co-founders of the new school.</p>
+        <span class="tag">Founding paper</span>
+      </div>
+      <div class="t-event">
+        <h4>1913–1920 — Tenerife station</h4>
+        <p>Köhler directed the Prussian Academy of Sciences anthropoid research station on Tenerife, where he conducted his famous chimpanzee experiments on insight learning.</p>
+        <span class="tag">Köhler's apes</span>
+      </div>
+      <div class="t-event">
+        <h4>1920s–30s — Migration to America</h4>
+        <p>All three eventually emigrated to the United States due to rising anti-Semitism and the Nazi regime, bringing Gestalt psychology to American academia.</p>
+        <span class="tag">Transatlantic shift</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="principles">
+    <div class="hero">
+      <div class="hero-avatar">⊞</div>
+      <div class="hero-text">
+        <h2>Laws of Perceptual Organization</h2>
+        <p>The brain automatically organizes visual information according to these innate principles. Click each card to see a visual explanation.</p>
+      </div>
+    </div>
+
+    <div class="principle-card" onclick="this.classList.toggle('active')">
+      <h4>1. Proximity</h4>
+      <p>Elements that are close together are perceived as belonging together.</p>
+      <div class="demo">
+        <svg width="200" height="60" viewBox="0 0 200 60">
+          <circle cx="20" cy="20" r="6" fill="var(--text-primary)"/>
+          <circle cx="40" cy="20" r="6" fill="var(--text-primary)"/>
+          <circle cx="60" cy="20" r="6" fill="var(--text-primary)"/>
+          <circle cx="100" cy="20" r="6" fill="var(--text-primary)"/>
+          <circle cx="120" cy="20" r="6" fill="var(--text-primary)"/>
+          <circle cx="140" cy="20" r="6" fill="var(--text-primary)"/>
+          <circle cx="20" cy="45" r="6" fill="var(--text-primary)"/>
+          <circle cx="40" cy="45" r="6" fill="var(--text-primary)"/>
+          <circle cx="60" cy="45" r="6" fill="var(--text-primary)"/>
+          <circle cx="100" cy="45" r="6" fill="var(--text-primary)"/>
+          <circle cx="120" cy="45" r="6" fill="var(--text-primary)"/>
+          <circle cx="140" cy="45" r="6" fill="var(--text-primary)"/>
+          <text x="200" y="35" text-anchor="end" font-size="11" fill="var(--text-tertiary)">You see 2 rows, not 6 columns</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="principle-card" onclick="this.classList.toggle('active')">
+      <h4>2. Similarity</h4>
+      <p>Elements that look alike (shape, color, size) are grouped together.</p>
+      <div class="demo">
+        <svg width="200" height="60" viewBox="0 0 200 60">
+          <circle cx="20" cy="20" r="6" fill="var(--chart-1)"/>
+          <rect x="34" y="14" width="12" height="12" fill="var(--chart-2)"/>
+          <circle cx="60" cy="20" r="6" fill="var(--chart-1)"/>
+          <rect x="74" y="14" width="12" height="12" fill="var(--chart-2)"/>
+          <circle cx="100" cy="20" r="6" fill="var(--chart-1)"/>
+          <rect x="114" y="14" width="12" height="12" fill="var(--chart-2)"/>
+          <circle cx="20" cy="45" r="6" fill="var(--chart-1)"/>
+          <rect x="34" y="39" width="12" height="12" fill="var(--chart-2)"/>
+          <circle cx="60" cy="45" r="6" fill="var(--chart-1)"/>
+          <rect x="74" y="39" width="12" height="12" fill="var(--chart-2)"/>
+          <circle cx="100" cy="45" r="6" fill="var(--chart-1)"/>
+          <rect x="114" y="39" width="12" height="12" fill="var(--chart-2)"/>
+          <text x="200" y="35" text-anchor="end" font-size="11" fill="var(--text-tertiary)">You see columns by shape</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="principle-card" onclick="this.classList.toggle('active')">
+      <h4>3. Closure</h4>
+      <p>The mind fills in missing information to perceive complete, familiar shapes.</p>
+      <div class="demo">
+        <svg width="120" height="60" viewBox="0 0 120 60">
+          <path d="M20 20 L50 20 L50 50 L20 50" stroke="var(--text-primary)" stroke-width="2" fill="none"/>
+          <path d="M70 20 L100 20 L100 50 L70 50" stroke="var(--text-primary)" stroke-width="2" fill="none" stroke-dasharray="4,4"/>
+          <text x="120" y="35" text-anchor="end" font-size="11" fill="var(--text-tertiary)">You see a square + a dashed square</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="principle-card" onclick="this.classList.toggle('active')">
+      <h4>4. Continuity</h4>
+      <p>The eye follows smooth, continuous paths rather than abrupt changes in direction.</p>
+      <div class="demo">
+        <svg width="160" height="60" viewBox="0 0 160 60">
+          <path d="M10 50 Q40 10 70 50 T130 50" stroke="var(--chart-1)" stroke-width="2" fill="none"/>
+          <path d="M10 10 Q40 50 70 10 T130 10" stroke="var(--chart-2)" stroke-width="2" fill="none"/>
+          <text x="160" y="35" text-anchor="end" font-size="11" fill="var(--text-tertiary)">You see two wavy lines, not V-shapes</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="principle-card" onclick="this.classList.toggle('active')">
+      <h4>5. Figure-Ground</h4>
+      <p>We automatically separate a visual scene into a foreground figure and a background.</p>
+      <div class="demo">
+        <svg width="120" height="80" viewBox="0 0 120 80">
+          <rect x="10" y="10" width="100" height="60" rx="8" fill="var(--surface-strong)"/>
+          <circle cx="60" cy="40" r="22" fill="var(--text-primary)"/>
+          <text x="60" y="45" text-anchor="middle" font-size="14" fill="var(--surface-raised)" font-weight="500">?</text>
+          <text x="130" y="45" text-anchor="start" font-size="11" fill="var(--text-tertiary)">Is it a circle on a card, or a hole?</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="principle-card" onclick="this.classList.toggle('active')">
+      <h4>6. Common Fate</h4>
+      <p>Elements that move or change in the same direction are perceived as a group.</p>
+      <div class="demo">
+        <svg width="200" height="60" viewBox="0 0 200 60">
+          <circle cx="20" cy="20" r="5" fill="var(--chart-1)"/>
+          <circle cx="40" cy="20" r="5" fill="var(--chart-1)"/>
+          <circle cx="60" cy="20" r="5" fill="var(--chart-1)"/>
+          <circle cx="100" cy="20" r="5" fill="var(--chart-2)"/>
+          <circle cx="120" cy="20" r="5" fill="var(--chart-2)"/>
+          <circle cx="140" cy="20" r="5" fill="var(--chart-2)"/>
+          <path d="M15 40 L65 40" stroke="var(--chart-1)" stroke-width="1.5" marker-end="url(#arrow1)"/>
+          <path d="M95 40 L145 40" stroke="var(--chart-2)" stroke-width="1.5" marker-end="url(#arrow2)"/>
+          <defs>
+            <marker id="arrow1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--chart-1)"/></marker>
+            <marker id="arrow2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--chart-2)"/></marker>
+          </defs>
+          <text x="200" y="35" text-anchor="end" font-size="11" fill="var(--text-tertiary)">Same direction = same group</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="experiments">
+    <div class="section-title">The phi phenomenon (Wertheimer, 1912)</div>
+    <div class="card">
+      <p class="card-body">Wertheimer set up two slits in a tachistoscope. When light flashed through the first slit, then the second slit in rapid succession, observers did not see two separate lights — they saw <strong>one light moving from one position to the other</strong>. This "apparent motion" proved that perception is an active, organizational process.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Why it matters</div>
+      <p class="card-body">The phi phenomenon is the basis for all motion pictures and animation. Film is simply a series of still images presented rapidly enough that the brain perceives continuous motion — a Gestalt organizational process, not a physical reality.</p>
+    </div>
+
+    <div class="section-title">Insight learning (Köhler, 1917)</div>
+    <div class="sultan-box">
+      <p class="card-body" style="margin-bottom: 12px;">Sultan the chimpanzee was presented with a series of problems. Follow the stages of his most famous insight:</p>
+      <div class="sultan-stage" id="sultan-stage">
+        <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="var(--surface-strong)"/><text x="20" y="25" text-anchor="middle" font-size="14" fill="var(--text-secondary)">🐵</text></svg>
+        <p id="sultan-text">Sultan is in a cage. A bunch of bananas hangs from the ceiling, out of reach. Two short bamboo sticks are on the floor.</p>
+      </div>
+      <div class="sultan-nav">
+        <button onclick="prevSultan()">← Previous</button>
+        <button onclick="nextSultan()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="quiz">
+    <div class="section-title">Test your understanding</div>
+    <div class="card" id="q1-card">
+      <p class="card-body" style="margin-bottom: 12px;"><strong>Q1:</strong> Which Gestalt principle explains why you perceive a dotted line as a continuous line rather than a series of dots?</p>
+      <button class="quiz-option" onclick="checkQ1(this, false)">Proximity</button>
+      <button class="quiz-option" onclick="checkQ1(this, false)">Similarity</button>
+      <button class="quiz-option" onclick="checkQ1(this, true)">Continuity</button>
+      <button class="quiz-option" onclick="checkQ1(this, false)">Closure</button>
+      <p class="quiz-feedback" id="q1-feedback"></p>
+    </div>
+    <div class="card" id="q2-card">
+      <p class="card-body" style="margin-bottom: 12px;"><strong>Q2:</strong> Who discovered the phi phenomenon — the illusion of motion from rapidly alternating stationary lights?</p>
+      <button class="quiz-option" onclick="checkQ2(this, false)">Kurt Koffka</button>
+      <button class="quiz-option" onclick="checkQ2(this, true)">Max Wertheimer</button>
+      <button class="quiz-option" onclick="checkQ2(this, false)">Wolfgang Köhler</button>
+      <button class="quiz-option" onclick="checkQ2(this, false)">Ivan Pavlov</button>
+      <p class="quiz-feedback" id="q2-feedback"></p>
+    </div>
+    <div class="card" id="q3-card">
+      <p class="card-body" style="margin-bottom: 12px;"><strong>Q3:</strong> In Köhler's experiments, Sultan the chimp solved problems by:</p>
+      <button class="quiz-option" onclick="checkQ3(this, false)">Gradual trial-and-error over many days</button>
+      <button class="quiz-option" onclick="checkQ3(this, true)">Sudden insight after a period of contemplation</button>
+      <button class="quiz-option" onclick="checkQ3(this, false)">Imitating the experimenter</button>
+      <button class="quiz-option" onclick="checkQ3(this, false)">Being trained with food rewards</button>
+      <p class="quiz-feedback" id="q3-feedback"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  const sultanStages = [
+    { icon: '🐵', text: 'Sultan is in a cage. A bunch of bananas hangs from the ceiling, out of reach. Two short bamboo sticks are on the floor.' },
+    { icon: '🤔', text: 'Sultan tries using one stick to reach the bananas — too short. He tries the other stick — also too short. He pauses and sits back.' },
+    { icon: '💡', text: 'After a quiet period, Sultan suddenly picks up one stick, inserts it into the other to make a longer pole, and retrieves the bananas.' },
+    { icon: '🎯', text: 'Köhler called this "insight learning" (Einsicht) — a sudden restructuring of the problem situation, not gradual conditioning.' }
+  ];
+  let sultanIndex = 0;
+  function updateSultan() {
+    document.getElementById('sultan-stage').innerHTML = '<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="var(--surface-strong)"/><text x="20" y="25" text-anchor="middle" font-size="14" fill="var(--text-secondary)">' + sultanStages[sultanIndex].icon + '</text></svg><p>' + sultanStages[sultanIndex].text + '</p>';
+  }
+  function nextSultan() { if (sultanIndex < sultanStages.length - 1) { sultanIndex++; updateSultan(); } }
+  function prevSultan() { if (sultanIndex > 0) { sultanIndex--; updateSultan(); } }
+
+  function checkQ1(btn, isCorrect) {
+    const parent = document.getElementById('q1-card');
+    parent.querySelectorAll('.quiz-option').forEach(opt => { opt.disabled = true; opt.style.cursor = 'default'; });
+    if (isCorrect) { btn.classList.add('correct'); document.getElementById('q1-feedback').textContent = 'Correct! Continuity explains why we perceive smooth, continuous paths rather than abrupt angles.'; document.getElementById('q1-feedback').style.color = 'var(--positive)'; }
+    else { btn.classList.add('wrong'); parent.querySelector('.quiz-option:nth-child(4)').classList.add('correct'); document.getElementById('q1-feedback').textContent = 'Not quite. Continuity is the principle that makes us see a dotted line as continuous.'; document.getElementById('q1-feedback').style.color = 'var(--danger)'; }
+    document.getElementById('q1-feedback').classList.add('show');
+  }
+  function checkQ2(btn, isCorrect) {
+    const parent = document.getElementById('q2-card');
+    parent.querySelectorAll('.quiz-option').forEach(opt => { opt.disabled = true; opt.style.cursor = 'default'; });
+    if (isCorrect) { btn.classList.add('correct'); document.getElementById('q2-feedback').textContent = 'Correct! Wertheimer discovered the phi phenomenon in 1912, launching Gestalt psychology.'; document.getElementById('q2-feedback').style.color = 'var(--positive)'; }
+    else { btn.classList.add('wrong'); parent.querySelector('.quiz-option:nth-child(3)').classList.add('correct'); document.getElementById('q2-feedback').textContent = 'Not quite. Max Wertheimer discovered the phi phenomenon on a train ride to Frankfurt.'; document.getElementById('q2-feedback').style.color = 'var(--danger)'; }
+    document.getElementById('q2-feedback').classList.add('show');
+  }
+  function checkQ3(btn, isCorrect) {
+    const parent = document.getElementById('q3-card');
+    parent.querySelectorAll('.quiz-option').forEach(opt => { opt.disabled = true; opt.style.cursor = 'default'; });
+    if (isCorrect) { btn.classList.add('correct'); document.getElementById('q3-feedback').textContent = 'Correct! Köhler demonstrated that apes solve problems through sudden insight, not trial-and-error conditioning.'; document.getElementById('q3-feedback').style.color = 'var(--positive)'; }
+    else { btn.classList.add('wrong'); parent.querySelector('.quiz-option:nth-child(3)').classList.add('correct'); document.getElementById('q3-feedback').textContent = 'Not quite. Sultan showed sudden insight — a restructuring of the problem — rather than gradual trial-and-error.'; document.getElementById('q3-feedback').style.color = 'var(--danger)'; }
+    document.getElementById('q3-feedback').classList.add('show');
+  }
+</script>
+
+</body>
+</html>
+
